@@ -18,14 +18,14 @@ class subcircuit(netlist_element):
         return(self.typeof + " " + self.name + "(" + str(self.nets) + "):" + str(insts))
 
 class instance(netlist_element):
-    def __init__(self, name, pins, reference, attributes):
+    def __init__(self, name, pins, reference, parameters):
         self.name = name;
         self.pins = pins;
         self.reference = reference;
-        self.attributes = attributes;
+        self.parameters = parameters;
         netlist_element.__init__(self,'instance')
     def __str__(self):
-        return(self.typeof + " " + self.name + "@" + self.reference + str(self.attributes))
+        return(self.typeof + " " + self.name + "@" + self.reference + str(self.parameters))
 
 class net:
     def __init__(self, name):

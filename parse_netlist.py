@@ -21,7 +21,7 @@ def parse_spectre(netlist_string):
     inst_param_key = identifier + _p.Suppress("=")
     inst_param_value = expression('expression')
     inst_parameter = _p.Group(inst_param_key('name') + inst_param_value('value')).setResultsName('key')
-    parameters = _p.Group(_p.ZeroOrMore(inst_parameter | linebreak)).setResultsName('attributes')
+    parameters = _p.Group(_p.ZeroOrMore(inst_parameter | linebreak)).setResultsName('parameters')
     instref = identifier
     instname = identifier
     instance = _p.Group(instname('name') + _p.Suppress('(') + nets('nets') + _p.Suppress(')') + instref('reference') + parameters + EOL).setResultsName('instance')
@@ -44,7 +44,7 @@ def parse_spectre(netlist_string):
 
 def handle_parameters(token):
     d = {}
-    for p in token.attributes:
+    for p in token.parameters:
         d[p[0]] = p[1]
     return d
 
@@ -53,11 +53,7 @@ def handle_subcircuit(token):
     nets = sc.nets
     name = sc.name
     instances = sc.subnetlist
-    #for instance in instances:
-        
     s = nl.subcircuit(name, nets, instances)
-    #print(sc.name + ": ")
-    #print(instances)
     return [s]
 
 def handle_instance(token):
@@ -65,19 +61,7 @@ def handle_instance(token):
     name = inst.name
     pins = inst.nets
     reference = inst.reference
-    attributes = inst.attributes
-    #print("instance " + name + ": " + reference)
-    i = nl.instance(name, pins, reference, attributes)
+    parameters = inst.parameters
+    i = nl.instance(name, pins, reference, parameters)
     return [i]
 
-file = open('netlist','r')
-sample = file.read()
-
-#print(sample)
-parsed_netlist = parse_spectre(sample)
-
-#print(parsed_netlist.asXML('netlist'))
-for obj in parsed_netlist:
-    print(obj)
-#for sc in parsed_netlist.subcircuit:
-#    print sc

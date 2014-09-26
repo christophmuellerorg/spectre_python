@@ -1,0 +1,14 @@
+subckt BUFFER A Z gnd gnds vdd vdds
+M1 (Z net0 vdd vdds) mypmos w=5 l=1
+M2 (net0 A vdd vdds) mypmos w=5 l=1
+M3 (Z net0 gnd gnds) mynmos w=2 l=1
+M4 (net0 A gnd gnds) mynmos w=2 l=1
+ends BUFFER
+
+subckt INVERTER A Z gnd gnds vdd vdds
+M1 (Z A vdd vdds) mypmos w=5 l=1
+M3 (Z A gnd gnds) mynmos w=2 l=1
+ends INVERTER
+
+I1 (net0 net1 0 gnds! vdd! vdds!) BUFFER
+I2 (net1 net2 0 gnds! vdd! vdds!) INVERTER
