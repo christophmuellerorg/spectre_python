@@ -1,11 +1,11 @@
 import parse_netlist
 
 # read a netlist file
-file = open('sample_netlist','r')
+file = open('cells.sp','r')
 sample = file.read()
 
 # parse the netlist
-parsed_netlist = parse_netlist.parse_spectre(sample)
+parsed_netlist = parse_netlist.parse_hspice(sample)
 
 # print the top level objects
 for obj in parsed_netlist:
