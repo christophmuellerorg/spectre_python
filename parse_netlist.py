@@ -55,8 +55,8 @@ def parse_hspice(netlist_string):
     net = identifier # a net
     nets = _p.Group(_p.OneOrMore(net('net') + ~_p.FollowedBy("=") | linebreak)) # many nets
     cktname = identifier # name of a subcircuit
-    cktname_end = _p.Keyword(".ends").suppress()
-    comment = _p.Suppress("//" + _p.SkipTo(_p.LineEnd()))
+    cktname_end = _p.CaselessLiteral(".ends").suppress()
+    comment = _p.Suppress("//" + _p.SkipTo(_p.LineEnd())) | _p.Suppress("*" + _p.SkipTo(_p.LineEnd()))
     expression = _p.Word(_p.alphanums+'._*+-/()')
     inst_param_key = identifier + _p.Suppress("=")
     inst_param_value = expression('expression')
@@ -68,7 +68,7 @@ def parse_hspice(netlist_string):
     subcircuit_content = _p.Group(_p.ZeroOrMore(instance | EOL | comment)).setResultsName('subnetlist')
     subcircuit = _p.Group(
         # matches subckt <name> <nets> <newline>
-        _p.Keyword(".subckt").suppress() + cktname('name') + nets('nets') + EOL  
+        _p.CaselessLiteral(".subckt").suppress() + cktname('name') + nets('nets') + EOL  
         # matches the content of the subcircuit
         + subcircuit_content
         # matches ends <name> <newline>

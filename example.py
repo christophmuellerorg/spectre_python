@@ -1,7 +1,7 @@
 import parse_netlist
 
 # read a netlist file
-file = open('cells.sp','r')
+file = open('cells.sp.single','r')
 sample = file.read()
 
 # parse the netlist
